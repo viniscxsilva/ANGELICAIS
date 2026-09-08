@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import { foraDeOperacao } from "@/lib/kpi/analise-operadores/meta-status";
 import type { PontoSerie } from "@/lib/kpi/analise-operadores/serial-types";
 
-type QuartilNivel = 1 | 2 | 3 | 4;
+export type QuartilNivel = 1 | 2 | 3 | 4;
 
 /**
  * Faixa de quartil que acompanha o gráfico de um KPI principal: um marcador
@@ -19,7 +19,7 @@ type QuartilNivel = 1 | 2 | 3 | 4;
  */
 const LARANJA = "color-mix(in oklch, var(--warning), var(--danger))";
 
-const ESTILO_POR_NIVEL: Record<
+export const ESTILO_POR_NIVEL: Record<
   QuartilNivel,
   { bg: string; fg: string; bd: string }
 > = {
@@ -44,6 +44,34 @@ const ESTILO_POR_NIVEL: Record<
     bd: "var(--danger-border)",
   },
 };
+
+/**
+ * Selo compacto de um único quartil (Q1 verde … Q4 vermelho), com as MESMAS
+ * cores/tokens da faixa acima — fonte única de verdade em `ESTILO_POR_NIVEL`.
+ * Usado fora do gráfico mensal (ex.: /operacao/quartil) para marcar o
+ * operador sem redefinir a paleta.
+ */
+export function QuartilBadge({
+  nivel,
+  className = "",
+}: {
+  nivel: QuartilNivel;
+  className?: string;
+}) {
+  const estilo = ESTILO_POR_NIVEL[nivel];
+  return (
+    <span
+      className={`ds-mono-sm inline-flex h-6 items-center justify-center rounded border px-2 text-[11px] font-semibold tabular-nums ${className}`}
+      style={{
+        backgroundColor: estilo.bg,
+        color: estilo.fg,
+        borderColor: estilo.bd,
+      }}
+    >
+      Q{nivel}
+    </span>
+  );
+}
 
 export function QuartilFaixa({ pontos }: { pontos: PontoSerie[] }) {
   return (

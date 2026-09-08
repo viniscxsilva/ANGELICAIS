@@ -60,6 +60,7 @@ const ALL_SECTIONS: SidebarSection[] = [
       { label: "Diário", href: "/operacao/diario" },
       { label: "Análise Operadores", href: "/operacao/analise-operadores" },
       { label: "Comparativo Consolidado", href: "/operacao/comparativo-consolidado" },
+      { label: "Quartil", href: "/operacao/quartil" },
       { label: "KPI Detalhado", href: "/operacao/kpi-detalhado" },
     ],
   },
