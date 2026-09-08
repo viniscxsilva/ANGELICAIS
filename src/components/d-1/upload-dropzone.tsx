@@ -19,7 +19,18 @@ export type UploadStep =
   | "done"
   | null;
 
-export function UploadDropzone() {
+interface UploadDropzoneProps {
+  /**
+   * Variante enxuta (usada em /reports/consolidado/analitico): sem o ícone
+   * central e com a área de drop bem mais baixa. Default false — o
+   * /reports/consolidado continua com o card cheio. Só muda o visual; drag &
+   * drop, parse, action de upload, modal de progresso e popup do comparativo
+   * seguem idênticos.
+   */
+  compact?: boolean;
+}
+
+export function UploadDropzone({ compact = false }: UploadDropzoneProps = {}) {
   const [step, setStep] = useState<UploadStep>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [rowsWritten, setRowsWritten] = useState<number>(0);
@@ -193,31 +204,39 @@ export function UploadDropzone() {
           boxShadow: isDragActive
             ? "0 0 40px var(--glow-accent)"
             : "var(--shadow-sm, none)",
-          padding: "2.5rem 1.5rem",
+          padding: compact ? "0.875rem 1.25rem" : "2.5rem 1.5rem",
           opacity: isProcessing ? 0.5 : 1,
           pointerEvents: isProcessing ? "none" : "auto",
-          minHeight: "100%",
+          minHeight: compact ? "auto" : "100%",
         }}
       >
         <input {...getInputProps()} />
 
         <div className="flex flex-col items-center justify-center gap-3 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border/80 bg-muted/40 text-muted-foreground">
-            {isDragActive ? (
-              <IconCloudUpload
-                size={30}
-                aria-hidden="true"
-              />
-            ) : (
-              <IconFileSpreadsheet
-                size={30}
-                aria-hidden="true"
-              />
-            )}
-          </div>
+          {!compact && (
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border/80 bg-muted/40 text-muted-foreground">
+              {isDragActive ? (
+                <IconCloudUpload
+                  size={30}
+                  aria-hidden="true"
+                />
+              ) : (
+                <IconFileSpreadsheet
+                  size={30}
+                  aria-hidden="true"
+                />
+              )}
+            </div>
+          )}
 
-          <div className="space-y-1">
-            <p className="ds-body text-foreground font-semibold">
+          <div className={compact ? "space-y-0.5" : "space-y-1"}>
+            <p
+              className={
+                compact
+                  ? "ds-body text-foreground text-sm font-semibold"
+                  : "ds-body text-foreground font-semibold"
+              }
+            >
               {isDragActive
                 ? "Solte o arquivo para enviar"
                 : "Arraste o arquivo CSV aqui ou clique para selecionar"}
