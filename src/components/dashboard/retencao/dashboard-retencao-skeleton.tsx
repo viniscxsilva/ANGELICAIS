@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { IconLoader2 } from "@tabler/icons-react";
 import { PageTransition } from "@/components/motion/page-transition";
 import { toast } from "sonner";
+import { StyledCard } from "@/components/gestor/styled-card";
+import { UploadDropzone } from "@/components/d-1/upload-dropzone";
 import { fetchDashboardRetencaoAction } from "@/lib/retencao/actions";
 import type { VisaoGeralData } from "@/lib/retencao/get-visao-geral";
 import type { TemaData } from "@/lib/retencao/get-por-tema";
@@ -28,6 +30,8 @@ interface DashboardRetencaoSkeletonProps {
   userKey: string;
   gestora?: string;
   reportHora?: string | null;
+  /** Mostra a área de upload da base D-1 (gated por manage_d1_base na página). */
+  showUpload?: boolean;
 }
 
 export function DashboardRetencaoSkeleton({
@@ -35,6 +39,7 @@ export function DashboardRetencaoSkeleton({
   userKey,
   gestora = "Equipe",
   reportHora: reportHoraInicial,
+  showUpload = false,
 }: DashboardRetencaoSkeletonProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -229,6 +234,14 @@ export function DashboardRetencaoSkeleton({
             </div>
           </header>
 
+          {showUpload && (
+            <StyledCard withGradient className="flex flex-col p-3">
+              <span className="text-muted-foreground mb-2 block text-xs font-semibold uppercase tracking-wider">
+                Atualizar Base D-1
+              </span>
+              <UploadDropzone compact />
+            </StyledCard>
+          )}
 
       {loading ? (
         <div className="flex flex-col items-center justify-center min-h-[400px] gap-3">

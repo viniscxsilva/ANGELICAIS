@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { DashboardRetencaoSkeleton } from "@/components/dashboard/retencao/dashboard-retencao-skeleton";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
+import { can } from "@/lib/auth/permissions";
 import { getPostLoginPath } from "@/lib/auth/post-login-path";
 import { getGestorConsolidado } from "@/lib/d1-db/get-gestor-consolidado";
 import { formatNomeProprio } from "@/lib/gestor/derive-nome-operador";
@@ -34,12 +35,17 @@ export default async function AnaliticoConsolidadoPage() {
     getEmailsEquipe(id),
   ]);
 
+  // Mesma regra do consolidado (gestor-equipe-section.tsx): a barra de upload
+  // da base D-1 só aparece para quem tem manage_d1_base.
+  const showUpload = can(user.profile.role, "manage_d1_base");
+
   return (
     <DashboardRetencaoSkeleton
       emailsEquipe={emailsEquipe}
       userKey={id}
       gestora={gestora}
       reportHora={reportHora}
+      showUpload={showUpload}
     />
   );
 }
