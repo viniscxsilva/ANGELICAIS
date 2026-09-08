@@ -212,6 +212,7 @@ export async function uploadConsolidadoAction(
   }
 
   revalidatePath("/reports/consolidado");
+  revalidatePath("/reports/consolidado/analitico");
 
   return {
     success: true,
